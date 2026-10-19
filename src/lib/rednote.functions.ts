@@ -38,12 +38,12 @@ export const resolveRednote = createServerFn({ method: "POST" })
     const meta = (name: string) =>
       html.match(new RegExp(`<meta[^>]+(?:name|property)="${name}"[^>]+content="([^"]*)"`, "i"))?.[1] ?? null;
 
-    const masters = [...html.matchAll(/"masterUrl":"([^"]+)"/g)].map((m) => decode(m[1]));
+    const masters = [...html.matchAll(/"masterUrl":"([^"]+)"/g)].map((m) => decode(m[1] ?? ""));
     const videoUrl = masters[0] ?? (meta("og:video") ? decode(meta("og:video")!) : null);
 
     const images = Array.from(
       new Set(
-        [...html.matchAll(/"urlDefault":"([^"]+)"/g)].map((m) => decode(m[1]).replace(/^http:/, "https:")),
+        [...html.matchAll(/"urlDefault":"([^"]+)"/g)].map((m) => decode(m[1] ?? "").replace(/^http:/, "https:")),
       ),
     ).slice(0, 18);
 
