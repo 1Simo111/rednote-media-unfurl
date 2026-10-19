@@ -7,9 +7,9 @@ import { resolveRednote, type RednoteResult } from "@/lib/rednote.functions";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "RedNote Video Downloader – No Watermark, Free & Fast" },
-      { name: "description", content: "Download RedNote (Xiaohongshu) videos and photos in HD without watermark. Paste a link, click download. Free, no signup." },
-      { property: "og:title", content: "RedNote Video Downloader – No Watermark" },
+      { title: "rednotosave – RedNote Video Downloader, No Watermark" },
+      { name: "description", content: "rednotosave downloads RedNote (Xiaohongshu) videos and photos in HD without watermark. Paste a link, click download. Free, no signup." },
+      { property: "og:title", content: "rednotosave – RedNote Video Downloader, No Watermark" },
       { property: "og:description", content: "Save RedNote videos and photos in HD, watermark-free, in one click." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
