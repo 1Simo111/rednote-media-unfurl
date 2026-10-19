@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { dict, languages, type Lang } from "@/lib/i18n";
 import { resolveRednote, type RednoteResult } from "@/lib/rednote.functions";
 
 export const Route = createFileRoute("/")({
@@ -17,32 +18,26 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const steps = [
-  { n: "1", t: "Copy the link", d: "In RedNote, tap Share → Copy link on any video or photo post." },
-  { n: "2", t: "Paste it here", d: "Drop the link (or the whole shared text) into the box above." },
-  { n: "3", t: "Download", d: "Get the original HD file — clean, with no watermark." },
-];
-
-const features = [
-  { t: "No watermark", d: "We fetch the original source file, not the stamped export." },
-  { t: "HD quality", d: "Download videos in the best resolution available." },
-  { t: "Photos too", d: "Save every image from carousel posts in one place." },
-  { t: "Free & private", d: "No signup, no app, nothing stored on our side." },
-];
-
-const faqs = [
-  { q: "Is it free?", a: "Yes. Paste as many links as you like." },
-  { q: "Which links work?", a: "xiaohongshu.com, xhslink.com and rednote.com post links, including shared text that contains a link." },
-  { q: "Why did my link fail?", a: "The post may be private, deleted, or region-restricted. Try copying the link again." },
-  { q: "Can I re-upload downloaded content?", a: "Please respect creators. Only download content for personal use or with permission." },
-];
-
 function Index() {
   const resolve = useServerFn(resolveRednote);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RednoteResult | null>(null);
+  const [lang, setLang] = useState<Lang>("en");
+  useEffect(() => {
+    const saved = localStorage.getItem("lang") as Lang | null;
+    if (saved && saved in dict) setLang(saved);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("lang", lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  }, [lang]);
+  const t = dict[lang];
+  const steps = t.steps.map(([tt, d], i) => ({ n: String(i + 1), t: tt, d }));
+  const features = t.features.map(([tt, d]) => ({ t: tt, d }));
+  const faqs = t.faqs.map(([q, a]) => ({ q, a }));
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -68,22 +63,28 @@ function Index() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">↓</span>
           RedSave
         </a>
-        <nav className="hidden gap-8 text-sm text-muted-foreground sm:flex">
-          <a href="#how" className="hover:text-foreground">How it works</a>
-          <a href="#features" className="hover:text-foreground">Features</a>
-          <a href="#faq" className="hover:text-foreground">FAQ</a>
-        </nav>
+        <div className="flex items-center gap-8">
+          <nav className="hidden gap-8 text-sm text-muted-foreground sm:flex">
+            <a href="#how" className="hover:text-foreground">{t.nav[0]}</a>
+            <a href="#features" className="hover:text-foreground">{t.nav[1]}</a>
+            <a href="#faq" className="hover:text-foreground">{t.nav[2]}</a>
+          </nav>
+          <select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}
+            className="h-9 cursor-pointer rounded-lg border bg-card px-2 text-sm font-medium outline-none focus:ring-2 focus:ring-ring">
+            {languages.map((l) => <option key={l.code} value={l.code}>{l.flag} {l.label}</option>)}
+          </select>
+        </div>
       </header>
 
       <section className="bg-hero px-6 pb-20 pt-14 text-center">
         <span className="inline-block rounded-full bg-accent px-4 py-1.5 text-xs font-semibold text-accent-foreground">
-          Free · No watermark · HD
+          {t.badge}
         </span>
         <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold leading-tight sm:text-6xl">
-          RedNote Video Downloader <span className="text-primary">without watermark</span>
+          {t.h1a} <span className="text-primary">{t.h1b}</span>
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
-          Paste a RedNote link and save the original video or photos in seconds.
+          {t.sub}
         </p>
 
         <form onSubmit={submit} className="mx-auto mt-10 max-w-2xl rounded-2xl border bg-card p-2 shadow-card">
@@ -92,17 +93,17 @@ function Index() {
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Paste RedNote link here…"
-                className="h-14 w-full rounded-xl bg-transparent px-4 pr-20 text-base outline-none placeholder:text-muted-foreground"
+                placeholder={t.placeholder}
+                className="h-14 w-full rounded-xl bg-transparent px-4 pr-20 rtl:pl-20 rtl:pr-4 text-base outline-none placeholder:text-muted-foreground"
               />
               <button type="button" onClick={paste}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground hover:bg-accent">
-                Paste
+                className="absolute right-2 rtl:left-2 rtl:right-auto top-1/2 -translate-y-1/2 rounded-lg bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground hover:bg-accent">
+                {t.paste}
               </button>
             </div>
             <button disabled={loading}
               className="h-14 rounded-xl bg-brand px-8 font-semibold text-primary-foreground shadow-glow transition hover:opacity-95 disabled:opacity-60">
-              {loading ? "Fetching…" : "Download"}
+              {loading ? t.fetching : t.download}
             </button>
           </div>
         </form>
@@ -112,22 +113,22 @@ function Index() {
         )}
 
         {result && (
-          <div className="mx-auto mt-8 max-w-2xl rounded-2xl border bg-card p-5 text-left shadow-card animate-in fade-in slide-in-from-bottom-2">
+          <div className="mx-auto mt-8 max-w-2xl rounded-2xl border bg-card p-5 text-start shadow-card animate-in fade-in slide-in-from-bottom-2">
             <div className="flex gap-4">
               {result.cover && (
                 <img src={result.cover} alt="" referrerPolicy="no-referrer" className="h-28 w-24 shrink-0 rounded-xl object-cover" />
               )}
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-success">Ready</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-success">{t.ready}</p>
                 <h3 className="mt-1 line-clamp-2 font-semibold">{result.title}</h3>
                 {result.videoUrl && (
                   <a href={result.videoUrl} target="_blank" rel="noreferrer noopener" referrerPolicy="no-referrer"
                     className="mt-4 inline-flex rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-primary-foreground shadow-glow">
-                    Download video (HD, no watermark)
+                    {t.dlVideo}
                   </a>
                 )}
                 {result.videoUrl && (
-                  <p className="mt-2 text-xs text-muted-foreground">If it opens in a player, right-click or long-press → Save video.</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{t.saveHint}</p>
                 )}
               </div>
             </div>
@@ -136,7 +137,7 @@ function Index() {
                 {result.images.map((src, i) => (
                   <a key={src} href={src} target="_blank" rel="noreferrer noopener" referrerPolicy="no-referrer" className="group relative">
                     <img src={src} alt={`Image ${i + 1}`} referrerPolicy="no-referrer" className="aspect-square w-full rounded-lg object-cover" />
-                    <span className="absolute inset-x-1 bottom-1 rounded-md bg-card/90 py-1 text-center text-xs font-semibold opacity-0 transition group-hover:opacity-100">Save</span>
+                    <span className="absolute inset-x-1 bottom-1 rounded-md bg-card/90 py-1 text-center text-xs font-semibold opacity-0 transition group-hover:opacity-100">{t.save}</span>
                   </a>
                 ))}
               </div>
@@ -146,7 +147,7 @@ function Index() {
       </section>
 
       <section id="how" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold">How it works</h2>
+        <h2 className="text-center text-3xl font-bold">{t.howTitle}</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {steps.map((s) => (
             <div key={s.n} className="rounded-2xl border bg-card p-6">
@@ -160,7 +161,7 @@ function Index() {
 
       <section id="features" className="bg-secondary px-6 py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold">Why people use RedSave</h2>
+          <h2 className="text-center text-3xl font-bold">{t.featTitle}</h2>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((f) => (
               <div key={f.t} className="rounded-2xl bg-card p-6 shadow-card">
@@ -174,7 +175,7 @@ function Index() {
       </section>
 
       <section id="faq" className="mx-auto max-w-3xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold">Questions</h2>
+        <h2 className="text-center text-3xl font-bold">{t.faqTitle}</h2>
         <div className="mt-10 space-y-3">
           {faqs.map((f) => (
             <details key={f.q} className="group rounded-xl border bg-card p-5">
@@ -186,7 +187,7 @@ function Index() {
       </section>
 
       <footer className="border-t px-6 py-8 text-center text-xs text-muted-foreground">
-        RedSave is not affiliated with RedNote / Xiaohongshu. Please respect creators' rights.
+        {t.footer}
       </footer>
     </div>
   );
