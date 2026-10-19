@@ -7,9 +7,9 @@ import { resolveRednote, type RednoteResult } from "@/lib/rednote.functions";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "RedNote Video Downloader – No Watermark, Free & Fast" },
-      { name: "description", content: "Download RedNote (Xiaohongshu) videos and photos in HD without watermark. Paste a link, click download. Free, no signup." },
-      { property: "og:title", content: "RedNote Video Downloader – No Watermark" },
+      { title: "rednotosave – RedNote Video Downloader, No Watermark" },
+      { name: "description", content: "rednotosave downloads RedNote (Xiaohongshu) videos and photos in HD without watermark. Paste a link, click download. Free, no signup." },
+      { property: "og:title", content: "rednotosave – RedNote Video Downloader, No Watermark" },
       { property: "og:description", content: "Save RedNote videos and photos in HD, watermark-free, in one click." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -61,7 +61,7 @@ function Index() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <a href="/" className="flex items-center gap-2 font-display text-lg font-bold">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">↓</span>
-          RedSave
+          rednotosave
         </a>
         <div className="flex items-center gap-8">
           <nav className="hidden gap-8 text-sm text-muted-foreground sm:flex">

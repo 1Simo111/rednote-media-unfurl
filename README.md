@@ -1,26 +1,55 @@
-# Rednote Media Unfurl
+# rednotosave
 
-build for me a website for Rednote Video Downloader & Watermark Remover / make look pro and easy to use
+RedNote (Xiaohongshu) video and photo downloader. Paste a post link and get the
+original HD file without the watermark, or every image from a carousel post.
 
-This project was built with [Lovable](https://lovable.dev).
+## Features
 
-**Live app**: https://rednote-media-unfurl.lovable.app
+- Watermark-free video, fetched from the original source file
+- Best available resolution
+- Carousel posts: every image saved in one place
+- No signup, no app, nothing stored
 
-## Build with Lovable
+## Supported links
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/1bd3d640-cde4-4b0a-a263-b4108840edf6).
+Post links from `xiaohongshu.com`, `xhslink.com` and `rednote.com`, including
+shared text that contains a link. Private, deleted or region-restricted posts
+cannot be fetched.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Run locally
 
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires Node.js 20 or newer.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+Other scripts:
+
+```sh
+npm run build     # production build
+npm run test      # unit tests
+npm run lint      # ESLint
+npm run format    # Prettier
+```
+
+## Layout
+
+```
+src/
+  lib/        server function that resolves a post link, i18n dictionaries, helpers
+  routes/     pages and the root layout
+  test/       tests
+public/       static files
+```
+
+## Interface languages
+
+English, French, Spanish, Arabic (right-to-left) and Chinese. All copy lives in
+`src/lib/i18n.ts`.
+
+## Notes
+
+rednotosave is not affiliated with RedNote or Xiaohongshu. Download content for
+personal use or with the creator's permission.
