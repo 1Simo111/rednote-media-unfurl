@@ -17,10 +17,12 @@ type Dict = {
   featTitle: string; features: [string, string][];
   faqTitle: string; faqs: [string, string][];
   footer: string;
+  originalUnavailable: string;
 };
 
 export const dict: Record<Lang, Dict> = {
   en: {
+    originalUnavailable: "The original video is unavailable for this post. No watermarked fallback was offered. Text or logos embedded by the creator cannot be removed by downloading the original.",
     nav: ["How it works", "Features", "FAQ"],
     badge: "Free · No watermark · HD", h1a: "RedNote Video Downloader", h1b: "without watermark",
     sub: "Paste a RedNote link and save the original video or photos in seconds.",
@@ -35,6 +37,7 @@ export const dict: Record<Lang, Dict> = {
     footer: "rednotosave is not affiliated with RedNote / Xiaohongshu. Please respect creators' rights.",
   },
   fr: {
+    originalUnavailable: "La vidéo originale est indisponible pour cette publication. Aucune version avec filigrane n’est proposée. Les textes ou logos intégrés par le créateur ne peuvent pas être supprimés en téléchargeant l’original.",
     nav: ["Fonctionnement", "Avantages", "FAQ"],
     badge: "Gratuit · Sans filigrane · HD", h1a: "Téléchargeur de vidéos RedNote", h1b: "sans filigrane",
     sub: "Collez un lien RedNote et enregistrez la vidéo ou les photos originales en quelques secondes.",
@@ -49,6 +52,7 @@ export const dict: Record<Lang, Dict> = {
     footer: "rednotosave n'est pas affilié à RedNote / Xiaohongshu. Respectez les droits des créateurs.",
   },
   es: {
+    originalUnavailable: "El video original no está disponible para esta publicación. No se ofrece una versión con marca de agua. Descargar el original no elimina textos o logos integrados por el creador.",
     nav: ["Cómo funciona", "Ventajas", "Preguntas"],
     badge: "Gratis · Sin marca de agua · HD", h1a: "Descargador de videos de RedNote", h1b: "sin marca de agua",
     sub: "Pega un enlace de RedNote y guarda el video o las fotos originales en segundos.",
@@ -63,6 +67,7 @@ export const dict: Record<Lang, Dict> = {
     footer: "rednotosave no está afiliado a RedNote / Xiaohongshu. Respeta los derechos de los creadores.",
   },
   ar: {
+    originalUnavailable: "الفيديو الأصلي غير متاح لهذا المنشور. لن نعرض نسخة بعلامة مائية. تنزيل الأصل لا يزيل النصوص أو الشعارات التي أضافها صانع المحتوى داخل الفيديو.",
     nav: ["طريقة العمل", "المميزات", "الأسئلة"],
     badge: "مجاني · بدون علامة مائية · HD", h1a: "تحميل فيديوهات RedNote", h1b: "بدون علامة مائية",
     sub: "الصق رابط RedNote واحفظ الفيديو أو الصور الأصلية في ثوانٍ.",
@@ -77,6 +82,7 @@ export const dict: Record<Lang, Dict> = {
     footer: "rednotosave غير تابع لـ RedNote / Xiaohongshu. يرجى احترام حقوق صناع المحتوى.",
   },
   zh: {
+    originalUnavailable: "此笔记的原始视频不可用，不会提供带水印的替代版本。下载原始视频无法删除创作者已嵌入画面的文字或标志。",
     nav: ["使用方法", "功能", "常见问题"],
     badge: "免费 · 无水印 · 高清", h1a: "小红书视频下载器", h1b: "无水印",
     sub: "粘贴小红书链接，几秒内保存原始视频或图片。",

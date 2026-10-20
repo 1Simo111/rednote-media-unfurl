@@ -45,7 +45,7 @@ function Index() {
     if (!url.trim()) return;
     setLoading(true); setError(null); setResult(null);
     try {
-      setResult(await resolve({ data: { url } }));
+      setResult(await resolve({ data: { url, lang } }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
