@@ -61,7 +61,7 @@ function Index() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <a href="/" className="flex items-center gap-2 font-display text-lg font-bold">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">↓</span>
-          rednotosave
+          {"redonotosave"}
         </a>
         <div className="flex items-center gap-8">
           <nav className="hidden gap-8 text-sm text-muted-foreground sm:flex">
