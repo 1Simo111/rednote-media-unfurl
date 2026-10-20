@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { dict, languages, type Lang } from "@/lib/i18n";
 import { resolveRednote, type RednoteResult } from "@/lib/rednote.functions";
+import headerIcon from "@/assets/header-icon.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,7 +61,7 @@ function Index() {
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <a href="/" className="flex items-center gap-2 font-display text-lg font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">↓</span>
+          <img src={headerIcon.url} alt="" className="h-9 w-9 shadow-glow" />
           {"redonotosave"}
         </a>
         <div className="flex items-center gap-8">
