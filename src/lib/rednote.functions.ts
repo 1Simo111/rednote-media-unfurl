@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { dict, type Lang } from "./i18n";
+import { hasVideoInHtml, originalVideoFromHtml } from "./rednote-media";
 
 export type RednoteResult = {
   title: string;
@@ -14,12 +16,13 @@ function decode(s: string) {
 }
 
 export const resolveRednote = createServerFn({ method: "POST" })
-  .inputValidator((d: { url: string }) => {
+  .inputValidator((d: { url: string; lang?: Lang }) => {
     const match = String(d?.url ?? "").match(/https?:\/\/[^\s"'<>]+/);
     if (!match) throw new Error("Please paste a valid RedNote link.");
     const u = new URL(match[0]);
     if (!ALLOWED.test(u.hostname)) throw new Error("Only RedNote / Xiaohongshu links are supported.");
-    return { url: u.toString() };
+    const lang: Lang = d.lang && Object.hasOwn(dict, d.lang) ? d.lang : "en";
+    return { url: u.toString(), lang };
   })
   .handler(async ({ data }): Promise<RednoteResult> => {
     const res = await fetch(data.url, {
@@ -38,8 +41,25 @@ export const resolveRednote = createServerFn({ method: "POST" })
     const meta = (name: string) =>
       html.match(new RegExp(`<meta[^>]+(?:name|property)="${name}"[^>]+content="([^"]*)"`, "i"))?.[1] ?? null;
 
-    const masters = [...html.matchAll(/"masterUrl":"([^"]+)"/g)].map((m) => decode(m[1] ?? ""));
-    const videoUrl = masters[0] ?? (meta("og:video") ? decode(meta("og:video")!) : null);
+    const videoUrl = originalVideoFromHtml(html, res.url);
+    if (!videoUrl && hasVideoInHtml(html)) throw new Error(dict[data.lang].originalUnavailable);
+    if (videoUrl) {
+      try {
+        const source = await fetch(videoUrl, {
+          headers: { Range: "bytes=0-0" },
+          signal: AbortSignal.timeout(15000),
+          redirect: "error",
+        });
+        const type = source.headers.get("content-type") ?? "";
+        await source.body?.cancel();
+        if (!source.ok || !/^(?:video\/|application\/octet-stream)/i.test(type)) {
+          throw new Error("Original source unavailable");
+        }
+      } catch (error) {
+        console.error("Original video check failed", error);
+        throw new Error(dict[data.lang].originalUnavailable);
+      }
+    }
 
     const images = Array.from(
       new Set(
@@ -49,7 +69,8 @@ export const resolveRednote = createServerFn({ method: "POST" })
 
     const title = decode(meta("og:title") ?? html.match(/<title>([^<]*)<\/title>/)?.[1] ?? "RedNote post")
       .replace(/ - 小红书$/, "");
-    const cover = meta("og:image") ? decode(meta("og:image")!) : images[0] ?? null;
+    const coverMeta = meta("og:image");
+    const cover = coverMeta ? decode(coverMeta) : images[0] ?? null;
 
     if (!videoUrl && images.length === 0)
       throw new Error("No media found. The post may be private or removed.");

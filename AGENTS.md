@@ -19,3 +19,4 @@
 - Keep the CSRF middleware in `src/start.ts`; removing it leaves server functions open to cross-site requests.
 - Do not add third-party telemetry, analytics or error-reporting services. Failures are logged to the server console only.
 - Server functions must stay in `*.functions.ts` modules so they are not bundled into the browser build.
+- Video selection uses the target post's structured original-source key and checks source availability; never fall back to arbitrary rendition or Open Graph URLs, because these may contain platform watermarks.
