@@ -36,3 +36,6 @@ dist-ssr
 
 # Local editor metadata
 .lovable/
+
+# Assistant notes (kept out of the repository)
+AGENTS.md
